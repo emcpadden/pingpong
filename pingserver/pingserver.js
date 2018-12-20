@@ -39,14 +39,8 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/poop', (req, res, next) => {
-  res.json({
-    poop: 'pee'
-  })
-});
-
 // this will handle API routes
-app.use('/api', apiRouter(pingService)());
+app.use('/api', apiRouter(pingService));
 
 // If we get here we will assume that the request is for the angular app
 app.use('/', (req, res, next) => { 
