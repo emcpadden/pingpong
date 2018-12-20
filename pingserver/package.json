@@ -1,0 +1,17 @@
+{
+  "name": "pingserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon ./pingserver"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "~4.16.0",
+    "morgan": "~1.9.0",
+    "nodemon": "^1.18.7",
+    "zeromq": "^5.1.0"
+  }
+}
