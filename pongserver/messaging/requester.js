@@ -1,13 +1,13 @@
 var zmq = require('zeromq');
 
-class Responder {
-    constructor(host, port, pingService) {
+class Requestor {
+    constructor(host, port) {
         this.addr = `tcp://${host}:${port}`;
         this.socket = zmq.socket('rep');
 
         this.socket.on('message', function(msg){
-            console.log('responder: req: %s', msg.toString());  
-            responder.send(`responder received: ${msg}`);
+            console.log('requestor: req: %s', msg.toString());  
+            responder.send(`requestor received: ${msg}`);
         });
     }
 

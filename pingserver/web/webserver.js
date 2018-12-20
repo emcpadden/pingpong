@@ -2,7 +2,7 @@ const express = require("express");
 const http = require("http");
 const path = require("path");
 const logger = require("morgan");
-const apiRouter = require("./api.router");
+const apiRouter = require("./api");
 
 function createWebServer(pingService) {
   // initialize the API/Web server

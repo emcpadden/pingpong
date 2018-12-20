@@ -1,25 +1,25 @@
 const express = require("express");
 const router = express.Router();
 
-function createApiRouter(pingServiceInstance) {
+function createApiRouter(gameServiceInstance) {
 
-    var pingService = pingServiceInstance;
+    const gameService = gameServiceInstance;
 
     router.get("/game", function(req, res, next) {
         // returns information about the current state of the game
-        let gameInfo = pingService.getGameInfo();
+        let gameInfo = gameService.getGameInfo();
         res.json(gameInfo);
     });
 
     router.post("/game", (req, res, next) => {
         // used to start a new game
-        let result = pingService.startGame();
+        let result = gameService.startGame();
         res.json(result);
     });
 
     router.post("/game/ping", (req, res, next) => {
         // used to attempt to send a PING action
-        let result = pingService.ping();
+        let result = gameService.ping();
         res.json(result);
     });
 

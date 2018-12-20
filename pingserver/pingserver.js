@@ -1,17 +1,17 @@
 // Messaging
-var Publisher = require('./publisher');
+var Publisher = require('./messaging/publisher');
 var publisher = new Publisher('127.0.0.1', 3010);
-var PingService = require('./ping.service');
-var pingService = new PingService(publisher);
-var Responder = require('./responder');
-var responder = new Responder('127.0.0.1', 3020, pingService);
+var GameService = require('./services/game');
+var gameService = new GameService(publisher);
+var Responder = require('./messaging/responder');
+var responder = new Responder('127.0.0.1', 3020, gameService);
 
 // start the messaging services
 publisher.start();
 responder.start();
 
 // start the API/web server
-require('./webserver')(pingService);
+require('./web/webserver')(gameService);
 
 /*
 setInterval(function(){

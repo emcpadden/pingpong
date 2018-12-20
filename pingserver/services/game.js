@@ -1,5 +1,5 @@
 
-class PingService {
+class GameService {
     
     constructor(publisher) {
         this.publisher = publisher;
@@ -39,4 +39,4 @@ class PingService {
     }
 }
 
-module.exports = PingService;
+module.exports = GameService;
