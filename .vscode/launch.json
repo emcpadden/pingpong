@@ -13,8 +13,14 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Launch Ping Server",
             "program": "${workspaceFolder}/pingserver/pingserver.js"
-        }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Pong Server",
+            "program": "${workspaceFolder}/pongserver/pongserver.js"
+        },
     ]
 }

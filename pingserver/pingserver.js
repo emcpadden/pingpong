@@ -1,17 +1,19 @@
 // Messaging
+const HOST = '127.0.0.1';
+const PUBLISHER_PORT = 3010;
+const RESPONDER_PORT = 3020;
+const WEB_SERVER_PORT = 3000;
 var Publisher = require('./messaging/publisher');
-var publisher = new Publisher('127.0.0.1', 3010);
-var GameService = require('./services/game');
-var gameService = new GameService(publisher);
+var publisher = new Publisher().initInstance(HOST, PUBLISHER_PORT);
 var Responder = require('./messaging/responder');
-var responder = new Responder('127.0.0.1', 3020, gameService);
+var responder = new Responder().initInstance(HOST, RESPONDER_PORT);
 
 // start the messaging services
 publisher.start();
 responder.start();
 
 // start the API/web server
-require('./web/webserver')(gameService);
+require('./web/webserver')(WEB_SERVER_PORT);
 
 /*
 setInterval(function(){

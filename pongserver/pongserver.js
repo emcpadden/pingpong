@@ -3,8 +3,10 @@ var zmq = require('zeromq')
   , puller = zmq.socket('pull')
   , requester = zmq.socket('req');
 
-puller.on('message', function(msg){
-    console.log('puller: get: %s', msg.toString());
+puller.on('message', function(payload){
+    let message = JSON.parse(payload);
+    let json = JSON.stringify(message);
+    console.log('puller: get: %s', json);
 });
 
 puller.connect('tcp://127.0.0.1:3010');

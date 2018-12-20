@@ -4,10 +4,10 @@ const path = require("path");
 const logger = require("morgan");
 const apiRouter = require("./api");
 
-function createWebServer(pingService) {
+function createWebServer(port) {
   // initialize the API/Web server
   const app = express();
-  const PORT = 3000;
+  const PORT = port;
 
   // This is for proxies
   app.set("trust proxy", "loopback");
@@ -31,7 +31,7 @@ function createWebServer(pingService) {
   });
 
   // this will handle API routes
-  app.use("/api", apiRouter(pingService));
+  app.use("/api", apiRouter);
 
   // If we get here we will assume that the request is for the angular app
   app.use("/", (req, res, next) => {

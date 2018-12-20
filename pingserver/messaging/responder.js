@@ -1,7 +1,12 @@
 var zmq = require('zeromq');
+const GameService = require('../services/game.service');
+const gameService = new GameService().getInstance();
 
 class Responder {
-    constructor(host, port, gameService) {
+    constructor(host, port) {
+    }
+
+    init(host, port) {
         this.addr = `tcp://${host}:${port}`;
         this.socket = zmq.socket('rep');
 
@@ -21,4 +26,23 @@ class Responder {
     }
 }
 
-module.exports = Responder;
+class ResponderSingleton {
+
+    constructor() {
+        if (!ResponderSingleton.instance) {
+            ResponderSingleton.instance = new Responder();
+        }
+    }
+
+    initInstance(host, port) {
+        let instance = this.getInstance();
+        instance.init(host, port);
+        return instance;
+    }
+  
+    getInstance() {
+        return ResponderSingleton.instance;
+    }
+}
+
+module.exports = ResponderSingleton;

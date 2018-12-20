@@ -1,7 +1,10 @@
 var zmq = require('zeromq');
 
 class Publisher {
-    constructor(host, port) {
+    constructor() {
+    }
+
+    init(host, port) {
         this.addr = `tcp://${host}:${port}`;
         this.socket = zmq.socket('push');
     }
@@ -20,4 +23,24 @@ class Publisher {
     }
 }
 
-module.exports = Publisher;
+class PublisherSingleton {
+
+    constructor() {
+        if (!PublisherSingleton.instance) {
+            PublisherSingleton.instance = new Publisher();
+        }
+    }
+
+    initInstance(host, port) {
+        let instance = this.getInstance();
+        instance.init(host, port);
+        return instance;
+    }
+  
+    getInstance() {
+        return PublisherSingleton.instance;
+    }
+  
+}
+
+module.exports = PublisherSingleton;
