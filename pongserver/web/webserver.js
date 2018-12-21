@@ -9,6 +9,28 @@ function createWebServer(port) {
   const app = express();
   const PORT = port;
 
+  // add swagger ui
+  const expressSwagger = require('express-swagger-generator')(app);
+  let options = {
+    swaggerDefinition: {
+      info: {
+          description: 'This is the PONG server',
+          title: 'PONG SERVER',
+          version: '1.0.0',
+      },
+      host: `localhost:${PORT}`,
+      basePath: '/',
+      produces: [
+          "application/json",
+          "application/xml"
+      ],
+      schemes: ['http'],
+    },
+    basedir: __dirname, //app absolute path
+    files: ['./api.js'] //Path to the API handle folder
+  };
+  expressSwagger(options)
+  
   // This is for proxies
   app.set("trust proxy", "loopback");
 
