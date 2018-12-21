@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { PingPongMessagingService } from './ping-pong-messaging.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,21 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'pongweb';
+
+  constructor(private pingPongMessagingService: PingPongMessagingService) {
+  }
+
+  ngOnInit() {
+    this.pingPongMessagingService.getConnection().subscribe(c => {
+      let json = JSON.stringify(c);
+      console.log(`PINGPONG CONNECTION: ${json}`);
+    });
+
+    this.pingPongMessagingService.getMessage().subscribe(m => {
+      let json = JSON.stringify(m);
+      console.log(`PINGPONG MESSAGE: ${json}`);
+    });
+
+    this.pingPongMessagingService.sendMessage('This is a test from Ping Service');
+  }
 }

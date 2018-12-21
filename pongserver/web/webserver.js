@@ -35,7 +35,7 @@ function createWebServer(port) {
   app.set("trust proxy", "loopback");
 
   // this will find the built angular application
-  const relativePathToStaticFiles = "../pongweb/dist/web";
+  const relativePathToStaticFiles = "../../pongweb/dist/pongweb";
   app.use(express.static(path.join(__dirname, relativePathToStaticFiles)));
 
   app.use(logger("dev"));
@@ -82,6 +82,10 @@ function createWebServer(port) {
   app.set("port", port);
   var server = http.createServer(app);
 
+  // start the web socket listener
+  let WebSocket = require('./websocket');
+  let webSocket = new WebSocket().initInstance(server);
+  
   // start the server
   server.listen(port);
   server.on("error", onError);

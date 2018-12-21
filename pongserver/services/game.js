@@ -1,6 +1,8 @@
 const HOST = '127.0.0.1';
 const REQUESTER_PORT = 3020;
 const Requester = require('../messaging/requester');
+const Websocket = require('../web/websocket');
+const websocket = new Websocket().getInstance();
 
 class GameService {
 
@@ -38,6 +40,9 @@ class GameService {
             default:
                 break;
         }
+
+        // send the response back to the web browser
+        websocket.sendMessage(message);
     }
 
     onResponse(response) {
@@ -46,6 +51,9 @@ class GameService {
             var promise = this.requestPromises.splice(index,1);
             delete response.requestId;
             promise[0].resolve(response);
+
+            // send the response back to the web browser
+            websocket.sendMessage(response);
         }
     }
 

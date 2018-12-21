@@ -13,6 +13,7 @@
     "express-swagger-generator": "^1.1.11",
     "morgan": "~1.9.0",
     "nodemon": "^1.18.7",
+    "socket.io": "^2.2.0",
     "uuid": "^3.3.2",
     "zeromq": "^5.1.0"
   }

@@ -2,7 +2,8 @@ const Publisher = require('../messaging/publisher');
 const publisher = new Publisher().getInstance();
 const StateMachine = require('javascript-state-machine');
 const uuid = require('uuid');
-
+const Websocket = require('../web/websocket');
+const websocket = new Websocket().getInstance();
 
 function createGameStateMachine() {
 
@@ -50,7 +51,10 @@ function createGameStateMachine() {
                     action,
                     next
                 };
-                publisher.send(JSON.stringify(msg));  
+                publisher.send(JSON.stringify(msg));
+
+                // send this to the browser
+                websocket.sendMessage(msg);  
             },
             onPing: (event) => {
 
@@ -74,6 +78,9 @@ function createGameStateMachine() {
                 // we will push a notification to tell the pong server that 
                 // a new game has started
                 publisher.send(JSON.stringify(msg));
+
+                // send this to the browser
+                websocket.sendMessage(msg);  
             },
             onPong: (event) => {
 
@@ -97,6 +104,9 @@ function createGameStateMachine() {
                 // we will push a notification to tell the pong server that 
                 // a new game has started
                 publisher.send(JSON.stringify(msg));
+
+                // send this to the browser
+                websocket.sendMessage(msg);  
             },
             allowedCommands: (fsm) => {
                 return fsm.transitions().map(t => t.toUpperCase());

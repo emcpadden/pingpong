@@ -61,7 +61,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "pongweb:build"
+            "browserTarget": "pongweb:build",
+            "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
             "production": {

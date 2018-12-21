@@ -5,6 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch Ping Web",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}/pingweb"
+        },
+        {
+            "name": "Launch Pong Web",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}/pongweb"
+        },
+        {
             "type": "node",
             "request": "attach",
             "name": "Attach by Process ID",
