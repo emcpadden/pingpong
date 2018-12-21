@@ -1,6 +1,8 @@
 const Publisher = require('../messaging/publisher');
 const publisher = new Publisher().getInstance();
-var StateMachine = require('javascript-state-machine');
+const StateMachine = require('javascript-state-machine');
+const uuid = require('uuid');
+
 
 function createGameStateMachine() {
 
@@ -31,16 +33,21 @@ function createGameStateMachine() {
                 // When we start, we will initialize the action array to an empty array
                 this.actions = [];
 
+                // create a new action and add it to the list
+                let action = {
+                    id: uuid(),
+                    type: "START",
+                    timestamp: new Date()
+                }
+                this.actions.push(action);
+
                 // get the nect transitions
                 let next = event.fsm.allowedCommands(event.fsm);
 
                 // we will push a notification to tell the pong server that 
                 // a new game has started
                 let msg = {
-                    action: {
-                        type: "START",
-                        timestamp: new Date()
-                    },
+                    action,
                     next
                 };
                 publisher.send(JSON.stringify(msg));  
@@ -52,6 +59,7 @@ function createGameStateMachine() {
 
                 // create a new action and add it to the list
                 let action = {
+                    id: uuid(),
                     type: "PING",
                     timestamp: new Date()
                 }
@@ -74,6 +82,7 @@ function createGameStateMachine() {
 
                 // create a new action and add it to the list
                 let action = {
+                    id: uuid(),
                     type: "PONG",
                     timestamp: new Date()
                 }
@@ -81,10 +90,7 @@ function createGameStateMachine() {
                 
                 // create the message to publish
                 let msg = {
-                    action: {
-                        type: "PONG",
-                        timestamp: new Date()
-                    },
+                    action,
                     next
                 };
                 
@@ -94,6 +100,13 @@ function createGameStateMachine() {
             },
             allowedCommands: (fsm) => {
                 return fsm.transitions().map(t => t.toUpperCase());
+            },
+            lastAction: () => {
+                let lastAction = null;
+                if (this.actions.length > 0) {
+                    lastAction = this.actions[this.actions.length - 1];
+                }
+                return lastAction;
             }
         }
     });

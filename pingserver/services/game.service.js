@@ -19,9 +19,11 @@ class GameService {
         if (this.gameStateMachine.can('start')) {
             this.gameStateMachine.start();
             let next = this.gameStateMachine.allowedCommands(this.gameStateMachine);
+            let lastAction = this.gameStateMachine.lastAction();
             return {
                 succeeded: true,
                 command: 'START',
+                action: lastAction,
                 next
             }
         } else {
@@ -39,9 +41,11 @@ class GameService {
         if (this.gameStateMachine.can('ping')) {
             this.gameStateMachine.ping();
             let next = this.gameStateMachine.allowedCommands(this.gameStateMachine);
+            let lastAction = this.gameStateMachine.lastAction();
             return {
                 succeeded: true,
                 command: 'PING',
+                action: lastAction,
                 next
             }
         } else {
@@ -59,9 +63,11 @@ class GameService {
         if (this.gameStateMachine.can('pong')) {
             this.gameStateMachine.pong();
             let next = this.gameStateMachine.allowedCommands(this.gameStateMachine);
+            let lastAction = this.gameStateMachine.lastAction();
             return {
                 succeeded: true,
                 command: 'PONG',
+                action: lastAction,
                 next
             }
         } else {
@@ -75,18 +81,19 @@ class GameService {
         }
     }
 
-    onRequest(command) {
-        switch(command) {
+    onRequest(request) {
+        switch(request.command) {
             case "START":
-                return this.start();
+                return Object.assign(this.start(), {requestId: request.requestId});
             case "PING":
-                return this.ping();
+                return Object.assign(this.ping(), {requestId: request.requestId});
             case "PONG":
-                return this.pong();
+                return Object.assign(this.pong(), {requestId: request.requestId});
             default:
                 return {
                     succeeded: false,
-                    command: command,
+                    requestId: request.requestId,
+                    command: request.command,
                     next: this.gameStateMachine.allowedCommands(),
                     error: `Unknown Command: ${command}`
                 }

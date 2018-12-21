@@ -1,4 +1,5 @@
 var zmq = require('zeromq');
+const uuid = require('uuid');
 
 class Requestor {
     constructor() {
@@ -27,8 +28,9 @@ class Requestor {
     }
 
     send(command) {
-        console.log(command);
-        this.socket.send(JSON.stringify({command}));
+        const requestId = uuid();
+        this.socket.send(JSON.stringify({requestId, command}));
+        return requestId;
     }
 }
 

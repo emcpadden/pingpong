@@ -12,7 +12,7 @@ class Responder {
 
         this.socket.on('message', (payload) => {
             let request = JSON.parse(payload);
-            let response = gameService.onRequest(request.command);
+            let response = gameService.onRequest(request);
             let json = JSON.stringify(response);
             this.socket.send(json);
         });

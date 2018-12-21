@@ -11,14 +11,18 @@ router.get("/game", function(req, res, next) {
 
 router.post("/game", (req, res, next) => {
     // used to start a new game
-    let result = gameService.startGame();
-    res.json(result);
+    let promise = gameService.start();
+    promise.then(
+        (result) => res.json(result)
+    );
 });
 
 router.post("/game/pong", (req, res, next) => {
     // used to attempt to send a PING action
-    let result = gameService.pong();
-    res.json(result);
+    let promise = gameService.pong();
+    promise.then(
+        (result) => res.json(result)
+    );
 });
 
 module.exports = router;

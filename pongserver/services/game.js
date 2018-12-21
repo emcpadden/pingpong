@@ -1,12 +1,13 @@
 const HOST = '127.0.0.1';
 const REQUESTER_PORT = 3020;
-var Requester = require('../messaging/requester');
+const Requester = require('../messaging/requester');
 
 class GameService {
 
     constructor() {
         this.actions = [];
-        this.requester = new Requester().initInstance(HOST, REQUESTER_PORT, this.onResponse);
+        this.requestPromises = [];
+        this.requester = new Requester().initInstance(HOST, REQUESTER_PORT, this.onResponse.bind(this));
         this.requester.start();
     }
 
@@ -16,20 +17,14 @@ class GameService {
         }
     }
 
-    startGame() {
-        this.requester.send('START');
-        return {
-            command: 'START',
-            status: 'SENT'
-        }
+    start() {
+        const requestId = this.requester.send('START');
+        return this.createPromise(requestId);
     }
 
     pong() {
-        this.requester.send('PONG');
-        return {
-            command: 'PONG',
-            status: 'SENT'
-        }
+        const requestId = this.requester.send('PONG');
+        return this.createPromise(requestId);
     }
 
     onMessage(message) {
@@ -46,8 +41,28 @@ class GameService {
     }
 
     onResponse(response) {
-        let json = JSON.stringify(response);
-        console.log(json);
+        let index = this.requestPromises.findIndex(r => r.requestId == response.requestId);
+        if (index >= 0) {
+            var promise = this.requestPromises.splice(index,1);
+            delete response.requestId;
+            promise[0].resolve(response);
+        }
+    }
+
+    createPromise(requestId) {
+        var res, rej;
+
+        var promise = new Promise((resolve, reject) => {
+            res = resolve;
+            rej = reject;
+        });
+        promise.requestId = requestId;
+        promise.resolve = res;
+        promise.reject = rej;
+
+        this.requestPromises.push(promise);
+
+        return promise;
     }
 }
 
