@@ -1,24 +1,54 @@
 var zmq = require('zeromq');
 
 class Requestor {
-    constructor(host, port) {
-        this.addr = `tcp://${host}:${port}`;
-        this.socket = zmq.socket('rep');
+    constructor() {
+    }
 
-        this.socket.on('message', function(msg){
-            console.log('requestor: req: %s', msg.toString());  
-            responder.send(`requestor received: ${msg}`);
+    init(host, port, responseCallback) {
+        this.addr = `tcp://${host}:${port}`;
+        this.socket = zmq.socket('req');
+        this.callback = responseCallback;
+
+        this.socket.on('message', (payload) => {
+            let message = JSON.parse(payload);
+            if (!!this.callback) {
+                this.callback(message);
+            }
         });
     }
 
     start() {
-        this.socket.bindSync(this.addr);
-        console.log(`responder bound to ${this.addr}`);
+        this.socket.connect(this.addr);
+        console.log(`requester connected to ${this.addr}`);
     }
 
     stop() {
         this.socket.close();
     }
+
+    send(command) {
+        console.log(command);
+        this.socket.send(JSON.stringify({command}));
+    }
 }
 
-module.exports = Responder;
+class RequestorSingleton {
+
+    constructor() {
+        if (!RequestorSingleton.instance) {
+            RequestorSingleton.instance = new Requestor();
+        }
+    }
+
+    initInstance(host, port, responseCallback) {
+        let instance = this.getInstance();
+        instance.init(host, port, responseCallback);
+        return instance;
+    }
+  
+    getInstance() {
+        return RequestorSingleton.instance;
+    }
+}
+
+module.exports = RequestorSingleton;

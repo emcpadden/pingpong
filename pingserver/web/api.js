@@ -11,7 +11,7 @@ router.get("/game", function(req, res, next) {
 
 router.post("/game", (req, res, next) => {
     // used to start a new game
-    let result = gameService.startGame();
+    let result = gameService.start();
     res.json(result);
 });
 

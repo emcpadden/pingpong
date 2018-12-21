@@ -1,5 +1,3 @@
-const Publisher = require('../messaging/publisher');
-const publisher = new Publisher().getInstance();
 const GameStateMachine = require('./game.statemachine');
 
 class GameService {
@@ -7,6 +5,7 @@ class GameService {
     constructor() {
         this.actions = [];
         this.gameStateMachine = GameStateMachine();
+        this.gameStateMachine.start();
     }
 
     getGameInfo() {
@@ -16,17 +15,21 @@ class GameService {
         }
     }
 
-    startGame() {
+    start() {
         if (this.gameStateMachine.can('start')) {
             this.gameStateMachine.start();
+            let next = this.gameStateMachine.allowedCommands(this.gameStateMachine);
             return {
                 succeeded: true,
-                state: this.gameStateMachine.state
+                command: 'START',
+                next
             }
         } else {
+            let next = this.gameStateMachine.allowedCommands(this.gameStateMachine);
             return {
                 succeeded: false,
-                state: this.gameStateMachine.state,
+                command: 'START',
+                next,
                 error: `Cannot restart at this time`
             }
         }
@@ -35,14 +38,18 @@ class GameService {
     ping() {
         if (this.gameStateMachine.can('ping')) {
             this.gameStateMachine.ping();
+            let next = this.gameStateMachine.allowedCommands(this.gameStateMachine);
             return {
                 succeeded: true,
-                state: this.gameStateMachine.state
+                command: 'PING',
+                next
             }
         } else {
+            let next = this.gameStateMachine.allowedCommands(this.gameStateMachine);
             return {
                 succeeded: false,
-                state: this.gameStateMachine.state,
+                command: 'PING',
+                next,
                 error: `Cannot ping at this time`
             }
         }
@@ -51,16 +58,38 @@ class GameService {
     pong() {
         if (this.gameStateMachine.can('pong')) {
             this.gameStateMachine.pong();
+            let next = this.gameStateMachine.allowedCommands(this.gameStateMachine);
             return {
                 succeeded: true,
-                state: this.gameStateMachine.state
+                command: 'PONG',
+                next
             }
         } else {
+            let next = this.gameStateMachine.allowedCommands(this.gameStateMachine);
             return {
                 succeeded: false,
-                state: this.gameStateMachine.state,
+                command: 'PONG',
+                next,
                 error: `Cannot pong at this time`
             }
+        }
+    }
+
+    onRequest(command) {
+        switch(command) {
+            case "START":
+                return this.start();
+            case "PING":
+                return this.ping();
+            case "PONG":
+                return this.pong();
+            default:
+                return {
+                    succeeded: false,
+                    command: command,
+                    next: this.gameStateMachine.allowedCommands(),
+                    error: `Unknown Command: ${command}`
+                }
         }
     }
 }

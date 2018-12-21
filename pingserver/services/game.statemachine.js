@@ -27,9 +27,12 @@ function createGameStateMachine() {
             actions: []
         },
         methods: {
-            onStart: () => {
+            onStart: (event) => {
                 // When we start, we will initialize the action array to an empty array
                 this.actions = [];
+
+                // get the nect transitions
+                let next = event.fsm.allowedCommands(event.fsm);
 
                 // we will push a notification to tell the pong server that 
                 // a new game has started
@@ -38,11 +41,14 @@ function createGameStateMachine() {
                         type: "START",
                         timestamp: new Date()
                     },
-                    next: ["PING", "START"]
+                    next
                 };
                 publisher.send(JSON.stringify(msg));  
             },
-            onPing: () => {
+            onPing: (event) => {
+
+                // get the nect transitions
+                let next = event.fsm.allowedCommands(event.fsm);
 
                 // create a new action and add it to the list
                 let action = {
@@ -54,14 +60,17 @@ function createGameStateMachine() {
                 // create the message to publish
                 let msg = {
                     action,
-                    next: ["PONG", "START"]
+                    next
                 };
 
                 // we will push a notification to tell the pong server that 
                 // a new game has started
                 publisher.send(JSON.stringify(msg));
             },
-            onPong: () => {
+            onPong: (event) => {
+
+                // get the nect transitions
+                let next = event.fsm.allowedCommands(event.fsm);
 
                 // create a new action and add it to the list
                 let action = {
@@ -76,12 +85,15 @@ function createGameStateMachine() {
                         type: "PONG",
                         timestamp: new Date()
                     },
-                    next: ["PING", "START"]
+                    next
                 };
                 
                 // we will push a notification to tell the pong server that 
                 // a new game has started
                 publisher.send(JSON.stringify(msg));
+            },
+            allowedCommands: (fsm) => {
+                return fsm.transitions().map(t => t.toUpperCase());
             }
         }
     });

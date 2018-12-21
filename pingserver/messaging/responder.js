@@ -10,9 +10,11 @@ class Responder {
         this.addr = `tcp://${host}:${port}`;
         this.socket = zmq.socket('rep');
 
-        this.socket.on('message', function(msg){
-            console.log('responder: req: %s', msg.toString());  
-            responder.send(`responder received: ${msg}`);
+        this.socket.on('message', (payload) => {
+            let request = JSON.parse(payload);
+            let response = gameService.onRequest(request.command);
+            let json = JSON.stringify(response);
+            this.socket.send(json);
         });
     }
 

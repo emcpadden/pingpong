@@ -1,21 +1,12 @@
-// worker.js
-var zmq = require('zeromq')
-  , puller = zmq.socket('pull')
-  , requester = zmq.socket('req');
+// Messaging
+const HOST = '127.0.0.1';
+const PULLER_PORT = 3010;
+const WEB_SERVER_PORT = 3001;
+var Puller = require('./messaging/puller');
+var puller = new Puller().initInstance(HOST, PULLER_PORT);
 
-puller.on('message', function(payload){
-    let message = JSON.parse(payload);
-    let json = JSON.stringify(message);
-    console.log('puller: get: %s', json);
-});
+// start the messaging services
+puller.start();
 
-puller.connect('tcp://127.0.0.1:3010');
-console.log('puller connected to port 3010');
-
-requester.connect("tcp://localhost:3020");
-console.log('requester connected to port 3010');
-
-/*
-console.log('Sending request');
-requester.send('requester: send message');
-*/
+// start the API/web server
+require('./web/webserver')(WEB_SERVER_PORT);
