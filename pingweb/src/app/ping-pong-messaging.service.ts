@@ -27,4 +27,13 @@ export class PingPongMessagingService {
           );
           */
   }
+
+  getCommand() {
+    return this.socket
+        .fromEvent("command");
+/*          .pipe(
+          map( data => data["msg"] )
+        );
+        */
+  }
 }

@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const GameService = require('../services/game.service');
 const gameService = new GameService().getInstance();
+const Websocket = require('../web/websocket');
+const websocket = new Websocket().getInstance();
 
 /**
  * This function comment is parsed by doctrine
@@ -27,6 +29,7 @@ router.post("/game", (req, res, next) => {
     // used to start a new game
     let result = gameService.start();
     res.json(result);
+    websocket.sendCommand(result);
 });
 
 /**
@@ -40,6 +43,7 @@ router.post("/game/ping", (req, res, next) => {
     // used to attempt to send a PING action
     let result = gameService.ping();
     res.json(result);
+    websocket.sendCommand(result);
 });
 
 module.exports = router;

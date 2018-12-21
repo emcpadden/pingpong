@@ -16,11 +16,12 @@ class GameService {
     }
 
     start() {
+        let response = null;
         if (this.gameStateMachine.can('start')) {
             this.gameStateMachine.start();
             let next = this.gameStateMachine.allowedCommands(this.gameStateMachine);
             let lastAction = this.gameStateMachine.lastAction();
-            return {
+            response = {
                 succeeded: true,
                 command: 'START',
                 action: lastAction,
@@ -28,21 +29,23 @@ class GameService {
             }
         } else {
             let next = this.gameStateMachine.allowedCommands(this.gameStateMachine);
-            return {
+            response = {
                 succeeded: false,
                 command: 'START',
                 next,
                 error: `Cannot restart at this time`
             }
         }
+        return response;
     }
 
     ping() {
+        let response = null;
         if (this.gameStateMachine.can('ping')) {
             this.gameStateMachine.ping();
             let next = this.gameStateMachine.allowedCommands(this.gameStateMachine);
             let lastAction = this.gameStateMachine.lastAction();
-            return {
+            response = {
                 succeeded: true,
                 command: 'PING',
                 action: lastAction,
@@ -50,21 +53,23 @@ class GameService {
             }
         } else {
             let next = this.gameStateMachine.allowedCommands(this.gameStateMachine);
-            return {
+            response = {
                 succeeded: false,
                 command: 'PING',
                 next,
                 error: `Cannot ping at this time`
             }
         }
+        return response;
     }
 
     pong() {
+        let response = null;
         if (this.gameStateMachine.can('pong')) {
             this.gameStateMachine.pong();
             let next = this.gameStateMachine.allowedCommands(this.gameStateMachine);
             let lastAction = this.gameStateMachine.lastAction();
-            return {
+            response = {
                 succeeded: true,
                 command: 'PONG',
                 action: lastAction,
@@ -72,13 +77,14 @@ class GameService {
             }
         } else {
             let next = this.gameStateMachine.allowedCommands(this.gameStateMachine);
-            return {
+            response = {
                 succeeded: false,
                 command: 'PONG',
                 next,
                 error: `Cannot pong at this time`
             }
         }
+        return response;
     }
 
     onRequest(request) {

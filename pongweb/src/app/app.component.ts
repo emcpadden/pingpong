@@ -18,6 +18,11 @@ export class AppComponent {
       console.log(`PINGPONG CONNECTION: ${json}`);
     });
 
+    this.pingPongMessagingService.getCommand().subscribe(c => {
+      let json = JSON.stringify(c);
+      console.log(`PINGPONG COMMAND: ${json}`);
+    });
+
     this.pingPongMessagingService.getMessage().subscribe(m => {
       let json = JSON.stringify(m);
       console.log(`PINGPONG MESSAGE: ${json}`);

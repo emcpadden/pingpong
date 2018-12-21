@@ -45,15 +45,12 @@ class GameService {
         websocket.sendMessage(message);
     }
 
-    onResponse(response) {
-        let index = this.requestPromises.findIndex(r => r.requestId == response.requestId);
+    onResponse(commandResponse) {
+        let index = this.requestPromises.findIndex(r => r.requestId == commandResponse.requestId);
         if (index >= 0) {
             var promise = this.requestPromises.splice(index,1);
-            delete response.requestId;
-            promise[0].resolve(response);
-
-            // send the response back to the web browser
-            websocket.sendMessage(response);
+            delete commandResponse.requestId;
+            promise[0].resolve(commandResponse);
         }
     }
 

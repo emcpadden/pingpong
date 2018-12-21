@@ -24,9 +24,20 @@ class Websocket {
         console.log(`Message From User: ${json}`);
     }
 
+    onCommand(command) {
+        let json = JSON.stringify(command);
+        console.log(`Command From User: ${json}`);
+    }
+
     sendMessage(message) {
         if (!!this.io) {
             this.io.emit('message', message);
+        }
+    }
+
+    sendCommand(command) {
+        if (!!this.io) {
+            this.io.emit('command', command);
         }
     }
 }

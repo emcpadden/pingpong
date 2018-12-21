@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const GameService = require('../services/game');
 const gameService = new GameService().getInstance();
+const Websocket = require('../web/websocket');
+const websocket = new Websocket().getInstance();
 
 /**
  * This function comment is parsed by doctrine
@@ -27,7 +29,12 @@ router.post("/game", (req, res, next) => {
     // used to start a new game
     let promise = gameService.start();
     promise.then(
-        (result) => res.json(result)
+        (result) => {
+            res.json(result);
+
+            // send the commandResponse back to the web browser
+            websocket.sendCommand(result);
+        }
     );
 });
 
@@ -42,7 +49,12 @@ router.post("/game/pong", (req, res, next) => {
     // used to attempt to send a PING action
     let promise = gameService.pong();
     promise.then(
-        (result) => res.json(result)
+        (result) => { 
+            res.json(result);
+
+            // send the commandResponse back to the web browser
+            websocket.sendCommand(result);
+        }
     );
 });
 
